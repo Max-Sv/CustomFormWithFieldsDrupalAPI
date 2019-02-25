@@ -1,0 +1,9 @@
+ex_form.routing:
+  path: '/ex-form'
+  defaults:
+    _form:  'Drupal\ex_form\Form\ExForm'
+    _title: 'Example Form Api Drupal 8'
+  requirements:
+    _permission: 'access content'
+
+
