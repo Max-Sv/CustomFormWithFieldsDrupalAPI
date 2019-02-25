@@ -3,3 +3,4 @@ type: module
 description: 'Example create form in Drupal 8'
 core: 8.x
 package: 'Custom'
+configure: config_form.settings

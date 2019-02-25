@@ -1,4 +1,4 @@
-ex_form.routing:
+ex_form.settings:
   path: '/ex-form'
   defaults:
     _form:  'Drupal\ex_form\Form\ExForm'

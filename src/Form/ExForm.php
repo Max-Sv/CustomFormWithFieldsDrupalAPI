@@ -11,6 +11,11 @@ use Drupal\Core\Form\FormStateInterface;              // Класс отвеча
  */
 class ExForm extends FormBase {
  
+
+
+
+
+
  // метод, который отвечает за саму форму - кнопки, поля
  public function buildForm(array $form, FormStateInterface $form_state) {
  
@@ -43,16 +48,7 @@ class ExForm extends FormBase {
    '#type' => 'email',
    '#title' => 'E-mail Adress:',
    '#required' => TRUE,
-   '#ajax' => [
-    'callback' => '::validateEmailAjax',
-    'event' => 'change',
-    'progress' => array(
-    'type' => 'throbber',
-    'message' => t('Verifying email..'),
-    ),
-  ],
-  # Элемент, в который мы будем писать результат в случае необходимости.
-  '#suffix' => '<div class="email-validation-message"></div>'
+  
   ];
  
   // Add a submit button that handles the submission of the form.
@@ -65,37 +61,36 @@ class ExForm extends FormBase {
   return $form;
  }
  
- // метод, который будет возвращать название формы
+ // метод, который будет возвращать название формы/src/Form/CollectPhone.php,
  public function getFormId() {
-  return 'ex_form_exform_form';
+  return 'ex_form';
  }
- 
- /// ф-я валидации
+
+
+
+
+
+
+
+ //VALIDATE EMAIL
  public function validateForm(array &$form, FormStateInterface $form_state) {
-  $title = $form_state->getValue('title');
-  $is_number = preg_match("/[\d]+/", $title, $match);
- 
-
- 
-
-
-
-
-/*$str="login@pochta.ru";
-if (preg_match("/[0-9a-z]+@[a-z]/", $str)) {
-    echo "Email введен верно!";
+ $email = $form_state->getValue('email');
+ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+$form_state->setErrorByName('email', "{$form_state->getValue('email')} is a invalid email");
 }
-else {
-    echo "Формат ввода email не верен!";
-}*/
 
- }
+  
+
+}
  
+
+
+
  // действия по сабмиту
  public function submitForm(array &$form, FormStateInterface $form_state) {
-  
+drupal_set_message($this->t('Your name is @name', array('@name' => $form_state->getValue('name')))); 
   drupal_set_message('Form submitted!');
-  drupal_set_message($form['email']);
+ drupal_set_message( $form_state->getValue('email') );
  }
  /**
  * {@inheritdoc}
