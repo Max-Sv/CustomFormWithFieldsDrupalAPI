@@ -67,8 +67,26 @@ $form_state->setErrorByName('email', "{$form_state->getValue('email')} is a inva
  // the action of the submit
  public function submitForm(array &$form, FormStateInterface $form_state) {
  drupal_set_message('Form submitted!');
- 
 
+//insert the form in the datadase
+$query = \Drupal::database()->insert('database_ex');
+$query->fields(array(
+  
+  'first_name',
+  'last_name',
+  'subject',
+  'message',
+  'email'
+));
+$query->values(array(
+  $form_state->getValue('first_name'),
+  $form_state->getValue('last_name'),
+  $form_state->getValue('subject'),
+  $form_state->getValue('message'),
+  $form_state->getValue('email'),
+  
+));
+$query->execute();
 
 //send email
 $send_mail = new \Drupal\Core\Mail\Plugin\Mail\PhpMail();
@@ -87,7 +105,7 @@ $result_email = $send_mail->mail($message);
 if ($result_email){
   drupal_set_message('The mail was sent!');
 }else{drupal_set_message('The mail wasn\'t sent!');}
-
 }
+
 }
 
