@@ -51,12 +51,13 @@ class ExForm extends FormBase {
   return $form;
  }
  
+
+
  //return the title of form
  public function getFormId() {
   return 'ex_form';
  }
-
- //VALIDATE EMAIL
+  //VALIDATE EMAIL
  public function validateForm(array &$form, FormStateInterface $form_state) {
  $email = $form_state->getValue('email');
  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -64,9 +65,12 @@ $form_state->setErrorByName('email', "{$form_state->getValue('email')} is a inva
 }
 }
 
+
+
  // the action of the submit
  public function submitForm(array &$form, FormStateInterface $form_state) {
  drupal_set_message('Form submitted!');
+ 
 
 /*
 //insert data of the form in the datadase
@@ -90,6 +94,7 @@ $query->values(array(
 $query->execute();
 */
 
+
 //send email
 $send_mail = new \Drupal\Core\Mail\Plugin\Mail\PhpMail();
 $from = $this->config('system.site')->get('mail');
@@ -112,6 +117,47 @@ if ($result_email){
   drupal_set_message('The mail wasn\'t sent!');
   // Logs an error
   \Drupal::logger('ex_form')->error('The mail - '.$form_state->getValue('email').'wasn\'t sent.');
+}
+
+
+
+
+$email = $form_state->getValue('email');
+$firstname = $form_state->getValue('first_name');
+$lastname = $form_state->getValue('last_name');
+
+
+$url = "https://api.hubapi.com/contacts/v1/contact/?hapikey=demo";
+
+$data = array(
+  'properties' => [
+    //[
+    //  'property' => 'email',
+    //  'value' => 'apitest@hubspot.com'
+    //],
+    [
+      'property' => 'firstname',
+      'value' => $firstname
+    ],
+    [
+      'property' => 'lastname',
+      'value' => $lastname 
+    ],
+    [
+      'property' => 'phone',
+      'value' => '555-1212'
+    ]
+  ]
+);
+
+$json = json_encode($data,true);
+
+$response = \Drupal::httpClient()->post($url.'&_format=hal_json', [
+  'headers' => [
+    'Content-Type' => 'application/json'
+  ],
+    'body' => $json
+]);
 }
 
 }
